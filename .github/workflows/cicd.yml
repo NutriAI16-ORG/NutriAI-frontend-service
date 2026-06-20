@@ -1,0 +1,418 @@
+name: CI/CD - Frontend Service
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main, dev]
+
+permissions:
+  contents: write
+  packages: read
+
+env:
+  SERVICE_NAME: nutriai-frontend
+  NODE_VERSION: '20'
+  SONAR_PROJECT_KEY: NutriAI-Frontend
+
+jobs:
+
+  # ── JOB 1: PREPARE ──────────────────────────────────────────────────────────
+  prepare:
+    name: "Prepare"
+    runs-on: ubuntu-latest
+
+    outputs:
+      tag:  ${{ steps.image_tag.outputs.tag }}
+      push: ${{ steps.image_tag.outputs.push }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Calculate Semantic Version (main only)
+        id: semver
+        if: github.ref == 'refs/heads/main'
+        uses: mathieudutour/github-tag-action@v6.2
+        with:
+          github_token: ${{ github.token }}
+          dry_run: true
+          default_bump: patch
+          tag_prefix: 'v'
+
+      - name: Resolve Image Tag
+        id: image_tag
+        run: |
+          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            echo "tag=${{ steps.semver.outputs.new_tag }}" >> $GITHUB_OUTPUT
+            echo "push=true"                               >> $GITHUB_OUTPUT
+          elif [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
+            SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
+            echo "tag=dev-${SHORT_SHA}"                    >> $GITHUB_OUTPUT
+            echo "push=true"                               >> $GITHUB_OUTPUT
+          else
+            SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
+            echo "tag=sha-${SHORT_SHA}"                    >> $GITHUB_OUTPUT
+            echo "push=false"                              >> $GITHUB_OUTPUT
+          fi
+
+      - name: Install dependencies
+        run: npm install
+
+  # ── JOB 2: TEST ─────────────────────────────────────────────────────────────
+  test:
+    name: "Test"
+    runs-on: ubuntu-latest
+    needs: prepare
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Tests
+        run: npx vitest run --coverage --reporter=default
+
+      - name: Upload Coverage Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report-frontend
+          path: coverage/
+          retention-days: 1
+
+  # ── JOB 3: SONAR ────────────────────────────────────────────────────────────
+  sonar:
+    name: "SonarQube"
+    runs-on: ubuntu-latest
+    needs: [prepare, test]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download Coverage Report
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-report-frontend
+          path: coverage
+
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v6
+        with:
+          projectBaseDir: .
+          args: >
+            -Dsonar.projectKey=${{ env.SONAR_PROJECT_KEY }}
+            -Dsonar.projectName=${{ env.SONAR_PROJECT_KEY }}
+            -Dsonar.sources=src
+            -Dsonar.tests=src
+            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
+            -Dsonar.language=js
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
+      - name: SonarQube Quality Gate
+        uses: SonarSource/sonarqube-quality-gate-action@v1
+        with:
+          scanMetadataReportFile: .scannerwork/report-task.txt
+        timeout-minutes: 5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  # ── JOB 4: SNYK ─────────────────────────────────────────────────────────────
+  snyk:
+    name: "Snyk Security"
+    runs-on: ubuntu-latest
+    needs: prepare
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install snyk-to-html
+        run: npm install -g snyk-to-html
+
+      - name: Snyk Scan (HTML Report)
+        run: |
+          npx snyk test --file=package.json --severity-threshold=high --json | snyk-to-html -o snyk-report.html || true
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+      - name: Upload Snyk Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: snyk-report-frontend
+          path: snyk-report.html
+          retention-days: 7
+
+  # ── JOB 5: BUILD ────────────────────────────────────────────────────────────
+  build:
+    name: "Docker Build"
+    runs-on: ubuntu-latest
+    needs: [prepare, test, sonar, snyk]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build Docker Image
+        run: |
+          docker build \
+            -f Dockerfile \
+            -t ${{ secrets.ACR_LOGIN_SERVER }}/${{ env.SERVICE_NAME }}:${{ needs.prepare.outputs.tag }} \
+            .
+
+      - name: Save image as tar artifact
+        run: |
+          docker save \
+            ${{ secrets.ACR_LOGIN_SERVER }}/${{ env.SERVICE_NAME }}:${{ needs.prepare.outputs.tag }} \
+            -o /tmp/docker-image.tar
+
+      - name: Upload image artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-image-frontend
+          path: /tmp/docker-image.tar
+          retention-days: 1
+
+  # ── JOB 6: TRIVY ────────────────────────────────────────────────────────────
+  trivy:
+    name: "Trivy Image Scan"
+    runs-on: ubuntu-latest
+    needs: [prepare, build]
+
+    steps:
+      - name: Download image artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: docker-image-frontend
+          path: /tmp
+
+      - name: Load Docker image
+        run: docker load -i /tmp/docker-image.tar
+
+      - name: Trivy Security Scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: '${{ secrets.ACR_LOGIN_SERVER }}/${{ env.SERVICE_NAME }}:${{ needs.prepare.outputs.tag }}'
+          format: table
+          exit-code: '1'
+          ignore-unfixed: true
+          severity: HIGH,CRITICAL
+
+  # ── JOB 7: PUSH ─────────────────────────────────────────────────────────────
+  push:
+    name: "Docker Push"
+    runs-on: ubuntu-latest
+    needs: [prepare, trivy]
+    if: needs.prepare.outputs.push == 'true' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev')
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download image artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: docker-image-frontend
+          path: /tmp
+
+      - name: Load Docker image
+        run: docker load -i /tmp/docker-image.tar
+
+      - name: Docker Login to ACR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ secrets.ACR_LOGIN_SERVER }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
+      - name: Push Docker Image (semver + latest)
+        run: |
+          docker push ${{ secrets.ACR_LOGIN_SERVER }}/${{ env.SERVICE_NAME }}:${{ needs.prepare.outputs.tag }}
+          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            docker tag  ${{ secrets.ACR_LOGIN_SERVER }}/${{ env.SERVICE_NAME }}:${{ needs.prepare.outputs.tag }} \
+                        ${{ secrets.ACR_LOGIN_SERVER }}/${{ env.SERVICE_NAME }}:latest
+            docker push ${{ secrets.ACR_LOGIN_SERVER }}/${{ env.SERVICE_NAME }}:latest
+          fi
+
+      - name: Create Git Tag
+        if: github.ref == 'refs/heads/main'
+        uses: mathieudutour/github-tag-action@v6.2
+        with:
+          github_token: ${{ github.token }}
+          custom_tag: ${{ needs.prepare.outputs.tag }}
+          tag_prefix: ''
+
+  # ── JOB 8: CREATE RELEASE ───────────────────────────────────────────────────
+  create-release:
+    name: "Create GitHub Release"
+    needs: [prepare, test, sonar, build, trivy, push]
+    if: |
+      always() &&
+      github.ref == 'refs/heads/main' &&
+      needs.push.result == 'success'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ needs.prepare.outputs.tag }}
+          name: Release ${{ needs.prepare.outputs.tag }}
+          body: |
+            Release of ${{ env.SERVICE_NAME }}
+            Version: ${{ needs.prepare.outputs.tag }}
+            Image: ${{ secrets.ACR_LOGIN_SERVER }}/${{ env.SERVICE_NAME }}:${{ needs.prepare.outputs.tag }}
+          generate_release_notes: true
+
+  # ── JOB 9: UPDATE HELM VALUES ────────────────────────────────────────────────
+  update-helm:
+    name: "CD - Update Helm Values"
+    runs-on: ubuntu-latest
+    needs: [prepare, push]
+    if: needs.push.result == 'success'
+
+    steps:
+      - name: Resolve target values file
+        id: resolve
+        run: |
+          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            echo "values_file=values-prod.yaml" >> $GITHUB_OUTPUT
+            echo "env=prod"                     >> $GITHUB_OUTPUT
+          elif [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
+            echo "values_file=values-dev.yaml"  >> $GITHUB_OUTPUT
+            echo "env=dev"                      >> $GITHUB_OUTPUT
+          fi
+
+      - name: Generate GitHub App Token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: ${{ secrets.MANIFEST_REPO }}
+
+      - name: Checkout manifest repo
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository_owner }}/${{ secrets.MANIFEST_REPO }}
+          token: ${{ steps.app-token.outputs.token }}
+          path: manifest-repo
+
+      - name: Verify values file exists
+        run: |
+          VALUES_FILE="manifest-repo/helm/nutriai/${{ steps.resolve.outputs.values_file }}"
+          if [[ ! -f "${VALUES_FILE}" ]]; then
+            echo "::error::Values file not found: ${VALUES_FILE}"
+            ls -la "manifest-repo/helm/nutriai/" 2>/dev/null || echo "Directory does not exist"
+            exit 1
+          fi
+          echo "Found: ${VALUES_FILE}"
+
+      - name: Update frontend.image.tag
+        run: |
+          TAG="${{ needs.prepare.outputs.tag }}"
+          VALUES_FILE="manifest-repo/helm/nutriai/${{ steps.resolve.outputs.values_file }}"
+
+          echo "Updating frontend.image.tag to ${TAG} in ${VALUES_FILE}"
+          yq e '."frontend".image.tag = "'"${TAG}"'"' -i "${VALUES_FILE}"
+
+          echo "-- Updated values --"
+          yq e '."frontend".image' "${VALUES_FILE}"
+
+      - name: Commit and push to manifest repo
+        run: |
+          TAG="${{ needs.prepare.outputs.tag }}"
+          ENV="${{ steps.resolve.outputs.env }}"
+          VALUES_FILE="helm/nutriai/${{ steps.resolve.outputs.values_file }}"
+
+          cd manifest-repo
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add "${VALUES_FILE}"
+          git diff --cached --quiet && echo "No changes to commit" && exit 0
+
+          git commit -m "chore(frontend): bump ${ENV} image tag to ${TAG} [skip ci]"
+          git push
+
+  # ── JOB 10: NOTIFY ──────────────────────────────────────────────────────────
+  notify:
+    name: "Notify"
+    runs-on: ubuntu-latest
+    needs: [prepare, test, sonar, build, trivy, push, create-release, update-helm]
+    if: always() && github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Send Email (Success)
+        if: ${{ !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') }}
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: ${{ secrets.SMTP_HOST }}
+          server_port: ${{ secrets.SMTP_PORT }}
+          username: ${{ secrets.SMTP_USERNAME }}
+          password: ${{ secrets.SMTP_PASSWORD }}
+          subject: "CI/CD Success - ${{ env.SERVICE_NAME }} ${{ needs.prepare.outputs.tag }}"
+          body: |
+            Build & Deploy Successful
+
+            Service:      ${{ env.SERVICE_NAME }}
+            Tag:          ${{ needs.prepare.outputs.tag }}
+            Image:        ${{ secrets.ACR_LOGIN_SERVER }}/${{ env.SERVICE_NAME }}:${{ needs.prepare.outputs.tag }}
+            Helm Updated: helm/nutriai/frontend.image.tag
+            Repository:   ${{ github.repository }}
+            Triggered By: ${{ github.actor }}
+          to: ${{ secrets.EMAIL_TO }}
+          from: GitHub Actions
+
+      - name: Send Email (Failure)
+        if: ${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') }}
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: ${{ secrets.SMTP_HOST }}
+          server_port: ${{ secrets.SMTP_PORT }}
+          username: ${{ secrets.SMTP_USERNAME }}
+          password: ${{ secrets.SMTP_PASSWORD }}
+          subject: "CI/CD Failed - ${{ env.SERVICE_NAME }} - Run #${{ github.run_number }}"
+          body: |
+            CI/CD Pipeline Execution Failed
+
+            Service:       ${{ env.SERVICE_NAME }}
+            Tag Attempted: ${{ needs.prepare.outputs.tag }}
+            Repository:    ${{ github.repository }}
+            Branch:        ${{ github.ref_name }}
+            Triggered By:  ${{ github.actor }}
+            Logs: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          to: ${{ secrets.EMAIL_TO }}
+          from: GitHub Actions
