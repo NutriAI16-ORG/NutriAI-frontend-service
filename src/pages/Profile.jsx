@@ -149,13 +149,13 @@ export default function Profile() {
                 <h5 className="fw-bold mb-3"><i className="fas fa-user text-primary-green me-2"></i>Personal Information</h5>
                 <form onSubmit={handleProfileSave}>
                   <div className="row g-3">
-                    <div className="col-12"><label className="form-label-nutriai">Full Name</label><input className="form-control form-control-nutriai" value={form.full_name || ''} onChange={e => setForm({ ...form, full_name: e.target.value })} required /></div>
-                    <div className="col-md-4"><label className="form-label-nutriai">Age</label><input type="number" className="form-control form-control-nutriai" value={form.age} onChange={e => setForm({ ...form, age: e.target.value })} /></div>
-                    <div className="col-md-4"><label className="form-label-nutriai">Gender</label><select className="form-control form-control-nutriai" value={form.gender} onChange={e => setForm({ ...form, gender: e.target.value })}><option value="">Select</option><option value="male">Male</option><option value="female">Female</option><option value="other">Other</option></select></div>
-                    <div className="col-md-4"><label className="form-label-nutriai">Blood Type</label><select className="form-control form-control-nutriai" value={form.blood_type} onChange={e => setForm({ ...form, blood_type: e.target.value })}><option value="">Select</option>{['A+','A-','B+','B-','O+','O-','AB+','AB-'].map(bt => <option key={bt} value={bt}>{bt}</option>)}</select></div>
-                    <div className="col-md-6"><label className="form-label-nutriai">Weight (kg)</label><input type="number" step="0.1" className="form-control form-control-nutriai" value={form.weight} onChange={e => setForm({ ...form, weight: e.target.value })} /></div>
-                    <div className="col-md-6"><label className="form-label-nutriai">Height (cm)</label><input type="number" step="0.1" className="form-control form-control-nutriai" value={form.height} onChange={e => setForm({ ...form, height: e.target.value })} /></div>
-                    <div className="col-12"><label className="form-label-nutriai">Emergency Contact</label><input className="form-control form-control-nutriai" value={form.emergency_contact} onChange={e => setForm({ ...form, emergency_contact: e.target.value })} /></div>
+                    <div className="col-12"><label htmlFor="profile-full-name" className="form-label-nutriai">Full Name</label><input id="profile-full-name" className="form-control form-control-nutriai" value={form.full_name || ''} onChange={e => setForm({ ...form, full_name: e.target.value })} required /></div>
+                    <div className="col-md-4"><label htmlFor="profile-age" className="form-label-nutriai">Age</label><input id="profile-age" type="number" className="form-control form-control-nutriai" value={form.age} onChange={e => setForm({ ...form, age: e.target.value })} /></div>
+                    <div className="col-md-4"><label htmlFor="profile-gender" className="form-label-nutriai">Gender</label><select id="profile-gender" className="form-control form-control-nutriai" value={form.gender} onChange={e => setForm({ ...form, gender: e.target.value })}><option value="">Select</option><option value="male">Male</option><option value="female">Female</option><option value="other">Other</option></select></div>
+                    <div className="col-md-4"><label htmlFor="profile-blood-type" className="form-label-nutriai">Blood Type</label><select id="profile-blood-type" className="form-control form-control-nutriai" value={form.blood_type} onChange={e => setForm({ ...form, blood_type: e.target.value })}><option value="">Select</option>{['A+','A-','B+','B-','O+','O-','AB+','AB-'].map(bt => <option key={bt} value={bt}>{bt}</option>)}</select></div>
+                    <div className="col-md-6"><label htmlFor="profile-weight" className="form-label-nutriai">Weight (kg)</label><input id="profile-weight" type="number" step="0.1" className="form-control form-control-nutriai" value={form.weight} onChange={e => setForm({ ...form, weight: e.target.value })} /></div>
+                    <div className="col-md-6"><label htmlFor="profile-height" className="form-label-nutriai">Height (cm)</label><input id="profile-height" type="number" step="0.1" className="form-control form-control-nutriai" value={form.height} onChange={e => setForm({ ...form, height: e.target.value })} /></div>
+                    <div className="col-12"><label htmlFor="profile-emergency-contact" className="form-label-nutriai">Emergency Contact</label><input id="profile-emergency-contact" className="form-control form-control-nutriai" value={form.emergency_contact} onChange={e => setForm({ ...form, emergency_contact: e.target.value })} /></div>
                   </div>
                   <button type="submit" className="btn btn-nutriai-primary w-100 mt-3" disabled={saving}><i className="fas fa-save me-2"></i>Save Changes</button>
                 </form>
@@ -253,8 +253,9 @@ export default function Profile() {
                   })}
                 </div>
                 <div className="mt-3">
-                  <label className="form-label-nutriai">Other conditions not listed above</label>
+                  <label htmlFor="profile-other-conditions" className="form-label-nutriai">Other conditions not listed above</label>
                   <input
+                    id="profile-other-conditions"
                     className="form-control form-control-nutriai"
                     placeholder="e.g., Crohn's Disease, Food Sensitivities..."
                     value={otherCondition}

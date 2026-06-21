@@ -16,8 +16,8 @@ export default function ForgotPassword() {
             </div>
             <form>
               <div className="mb-3">
-                <label className="form-label-nutriai">Email Address</label>
-                <input type="email" className="form-control form-control-nutriai" placeholder="your@email.com" required />
+                <label htmlFor="forgot-password-email" className="form-label-nutriai">Email Address</label>
+                <input id="forgot-password-email" type="email" className="form-control form-control-nutriai" placeholder="your@email.com" required />
               </div>
               <button type="submit" className="btn btn-nutriai-primary w-100">
                 <i className="fas fa-paper-plane me-2"></i>Send Reset Link

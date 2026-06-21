@@ -69,32 +69,32 @@ export default function Register() {
             <form onSubmit={handleSubmit}>
               <div className="row g-3">
                 <div className="col-12">
-                  <label className="form-label-nutriai">Full Name *</label>
-                  <input className="form-control form-control-nutriai" value={form.full_name} onChange={e => update('full_name', e.target.value)} required />
+                  <label htmlFor="register-full-name" className="form-label-nutriai">Full Name *</label>
+                  <input id="register-full-name" className="form-control form-control-nutriai" value={form.full_name} onChange={e => update('full_name', e.target.value)} required />
                 </div>
                 <div className="col-md-6">
-                  <label className="form-label-nutriai">Email Address *</label>
-                  <input type="email" className="form-control form-control-nutriai" value={form.email} onChange={e => update('email', e.target.value)} required />
+                  <label htmlFor="register-email" className="form-label-nutriai">Email Address *</label>
+                  <input id="register-email" type="email" className="form-control form-control-nutriai" value={form.email} onChange={e => update('email', e.target.value)} required />
                 </div>
                 <div className="col-md-6">
-                  <label className="form-label-nutriai">Username *</label>
-                  <input className="form-control form-control-nutriai" value={form.username} onChange={e => update('username', e.target.value)} required minLength={3} />
+                  <label htmlFor="register-username" className="form-label-nutriai">Username *</label>
+                  <input id="register-username" className="form-control form-control-nutriai" value={form.username} onChange={e => update('username', e.target.value)} required minLength={3} />
                 </div>
                 <div className="col-md-6">
-                  <label className="form-label-nutriai">Password *</label>
-                  <input type="password" className="form-control form-control-nutriai" value={form.password} onChange={e => update('password', e.target.value)} required minLength={6} />
+                  <label htmlFor="register-password" className="form-label-nutriai">Password *</label>
+                  <input id="register-password" type="password" className="form-control form-control-nutriai" value={form.password} onChange={e => update('password', e.target.value)} required minLength={6} />
                 </div>
                 <div className="col-md-6">
-                  <label className="form-label-nutriai">Confirm Password *</label>
-                  <input type="password" className="form-control form-control-nutriai" value={form.confirm_password} onChange={e => update('confirm_password', e.target.value)} required />
+                  <label htmlFor="register-confirm-password" className="form-label-nutriai">Confirm Password *</label>
+                  <input id="register-confirm-password" type="password" className="form-control form-control-nutriai" value={form.confirm_password} onChange={e => update('confirm_password', e.target.value)} required />
                 </div>
                 <div className="col-md-4">
-                  <label className="form-label-nutriai">Age</label>
-                  <input type="number" className="form-control form-control-nutriai" value={form.age} onChange={e => update('age', e.target.value)} min={1} max={150} />
+                  <label htmlFor="register-age" className="form-label-nutriai">Age</label>
+                  <input id="register-age" type="number" className="form-control form-control-nutriai" value={form.age} onChange={e => update('age', e.target.value)} min={1} max={150} />
                 </div>
                 <div className="col-md-4">
-                  <label className="form-label-nutriai">Gender</label>
-                  <select className="form-control form-control-nutriai" value={form.gender} onChange={e => update('gender', e.target.value)}>
+                  <label htmlFor="register-gender" className="form-label-nutriai">Gender</label>
+                  <select id="register-gender" className="form-control form-control-nutriai" value={form.gender} onChange={e => update('gender', e.target.value)}>
                     <option value="">Select</option>
                     <option value="male">Male</option>
                     <option value="female">Female</option>
@@ -102,8 +102,8 @@ export default function Register() {
                   </select>
                 </div>
                 <div className="col-md-4">
-                  <label className="form-label-nutriai">Weight (kg)</label>
-                  <input type="number" step="0.1" className="form-control form-control-nutriai" value={form.weight} onChange={e => update('weight', e.target.value)} />
+                  <label htmlFor="register-weight" className="form-label-nutriai">Weight (kg)</label>
+                  <input id="register-weight" type="number" step="0.1" className="form-control form-control-nutriai" value={form.weight} onChange={e => update('weight', e.target.value)} />
                 </div>
               </div>
               <button type="submit" className="btn btn-nutriai-primary w-100 mt-4" disabled={loading}>

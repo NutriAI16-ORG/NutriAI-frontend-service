@@ -79,8 +79,8 @@ export default function Documents() {
           <div className="content-card mb-4">
             <div className="card-header-custom"><h5><i className="fas fa-cloud-upload-alt text-primary-green me-2"></i>Upload New Document</h5></div>
             <div className="mb-3">
-              <label className="form-label-nutriai">Document Type</label>
-              <select className="form-control form-control-nutriai" style={{ maxWidth: '300px' }} value={docType} onChange={e => setDocType(e.target.value)}>
+              <label htmlFor="doc-type-select" className="form-label-nutriai">Document Type</label>
+              <select id="doc-type-select" className="form-control form-control-nutriai" style={{ maxWidth: '300px' }} value={docType} onChange={e => setDocType(e.target.value)}>
                 <option value="lab_report">Lab Report</option><option value="prescription">Prescription</option><option value="other">Other</option>
               </select>
             </div>

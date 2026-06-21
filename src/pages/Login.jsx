@@ -53,13 +53,13 @@ export default function Login() {
 
             <form onSubmit={handleSubmit}>
               <div className="mb-3">
-                <label className="form-label-nutriai">Email Address</label>
-                <input type="email" className="form-control form-control-nutriai" placeholder="your@email.com"
+                <label htmlFor="login-email" className="form-label-nutriai">Email Address</label>
+                <input id="login-email" type="email" className="form-control form-control-nutriai" placeholder="your@email.com"
                   value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} required />
               </div>
               <div className="mb-3">
-                <label className="form-label-nutriai">Password</label>
-                <input type="password" className="form-control form-control-nutriai" placeholder="••••••••"
+                <label htmlFor="login-password" className="form-label-nutriai">Password</label>
+                <input id="login-password" type="password" className="form-control form-control-nutriai" placeholder="••••••••"
                   value={form.password} onChange={e => setForm({ ...form, password: e.target.value })} required />
               </div>
               <div className="d-flex justify-content-between align-items-center mb-3">
