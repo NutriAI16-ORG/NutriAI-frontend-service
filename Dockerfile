@@ -9,8 +9,9 @@ RUN npm run build
 # Stage 2: Serve with Nginx
 FROM nginx:alpine
 
-# Install libcap to allow non-root user to bind to port 80
-RUN apk add --no-cache libcap && \
+# Upgrade packages to patch base image vulnerabilities (e.g., libexpat) and install libcap
+RUN apk update && apk upgrade --no-cache && \
+    apk add --no-cache libcap && \
     setcap 'cap_net_bind_service=+ep' /usr/sbin/nginx && \
     apk del libcap
 
