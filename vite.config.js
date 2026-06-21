@@ -17,4 +17,9 @@ export default defineConfig({
     outDir: 'dist',
     sourcemap: false,
   },
+  test: {
+    coverage: {
+      reporter: ['text', 'lcov'],
+    },
+  },
 })
