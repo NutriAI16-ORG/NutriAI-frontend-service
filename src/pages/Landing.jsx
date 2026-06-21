@@ -100,8 +100,8 @@ export default function Landing() {
               { icon: 'fa-file-medical-alt', color: 'blue', title: 'Smart Document OCR', desc: 'Upload lab reports and prescriptions. Azure AI extracts and understands your medical data automatically.' },
               { icon: 'fa-shield-alt', color: 'teal', title: 'Allergy Protection', desc: 'Your food allergies are always front and center. Our AI never recommends foods that could trigger reactions.' },
               { icon: 'fa-chart-line', color: 'orange', title: 'Health Tracking', desc: 'Track weight, blood sugar, blood pressure, and meals with interactive charts to monitor your progress.' },
-            ].map((f, i) => (
-              <div key={i} className="col-md-6 col-lg-3 feature-card-animated">
+            ].map((f) => (
+              <div key={f.title} className="col-md-6 col-lg-3 feature-card-animated">
                 <div className="feature-card">
                   <div className={`feature-icon ${f.color}`}><i className={`fas ${f.icon}`}></i></div>
                   <h5>{f.title}</h5>
@@ -125,8 +125,8 @@ export default function Landing() {
               { num: '1', title: 'Upload Documents', desc: 'Upload your lab reports, prescriptions, or medical documents. Our AI-powered OCR extracts all the important data.' },
               { num: '2', title: 'AI Analysis', desc: 'The AI engine analyzes your medical data along with your allergies and preferences to create a safe, personalized plan.' },
               { num: '3', title: 'Get Your Plan', desc: 'Receive a detailed weekly meal plan with foods to eat, foods to avoid, nutritional guidelines, and allergy warnings.' },
-            ].map((s, i) => (
-              <div key={i} className="col-md-4">
+            ].map((s) => (
+              <div key={s.title} className="col-md-4">
                 <div className="step-card">
                   <div className="step-number">{s.num}</div>
                   <h5>{s.title}</h5>
@@ -150,8 +150,8 @@ export default function Landing() {
               { text: '"NutriAI completely changed how I manage my diabetes diet. The AI understands my lab reports and gives me practical meal plans I can actually follow."', author: 'Sarah Johnson', role: 'Type 2 Diabetes Patient' },
               { text: '"As someone with multiple food allergies, I finally feel safe with diet recommendations. The allergy protection feature is incredibly thorough."', author: 'Michael Chen', role: 'Allergy Patient' },
               { text: '"I recommend NutriAI to all my patients. It bridges the gap between lab results and actionable dietary advice beautifully."', author: 'Dr. Emily Rodriguez', role: 'Clinical Nutritionist' },
-            ].map((t, i) => (
-              <div key={i} className="col-md-4">
+            ].map((t) => (
+              <div key={t.author} className="col-md-4">
                 <div className="testimonial-card">
                   <div className="testimonial-text">{t.text}</div>
                   <div className="testimonial-author">{t.author}</div>

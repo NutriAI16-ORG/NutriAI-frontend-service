@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types'
+
 export default function ConfirmModal({ show, title, message, onConfirm, onCancel }) {
   if (!show) return null
 
@@ -22,4 +24,12 @@ export default function ConfirmModal({ show, title, message, onConfirm, onCancel
       </div>
     </div>
   )
+}
+
+ConfirmModal.propTypes = {
+  show: PropTypes.bool.isRequired,
+  title: PropTypes.string,
+  message: PropTypes.string,
+  onConfirm: PropTypes.func.isRequired,
+  onCancel: PropTypes.func.isRequired,
 }

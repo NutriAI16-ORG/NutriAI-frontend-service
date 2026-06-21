@@ -1,4 +1,5 @@
-import { createContext, useState, useEffect, useCallback } from 'react'
+import { createContext, useState, useEffect, useCallback, useMemo } from 'react'
+import PropTypes from 'prop-types'
 import api from '../api/axios'
 
 export const AuthContext = createContext(null)
@@ -58,12 +59,25 @@ export function AuthProvider({ children }) {
     return res.data.auth_url
   }
 
+  const contextValue = useMemo(() => ({
+    user,
+    loading,
+    flash,
+    showFlash,
+    login,
+    register,
+    logout,
+    microsoftLogin,
+    fetchUser,
+  }), [user, loading, flash, showFlash, fetchUser])
+
   return (
-    <AuthContext.Provider value={{
-      user, loading, flash, showFlash,
-      login, register, logout, microsoftLogin, fetchUser
-    }}>
+    <AuthContext.Provider value={contextValue}>
       {children}
     </AuthContext.Provider>
   )
+}
+
+AuthProvider.propTypes = {
+  children: PropTypes.node.isRequired,
 }

@@ -31,7 +31,14 @@ export default function HealthTracker() {
   const handleHealthSubmit = async (e) => {
     e.preventDefault(); setSaving(true)
     try {
-      const payload = { ...healthForm, weight: healthForm.weight ? parseFloat(healthForm.weight) : null, blood_sugar_fasting: healthForm.blood_sugar_fasting ? parseFloat(healthForm.blood_sugar_fasting) : null, blood_sugar_postprandial: healthForm.blood_sugar_postprandial ? parseFloat(healthForm.blood_sugar_postprandial) : null, blood_pressure_systolic: healthForm.blood_pressure_systolic ? parseInt(healthForm.blood_pressure_systolic) : null, blood_pressure_diastolic: healthForm.blood_pressure_diastolic ? parseInt(healthForm.blood_pressure_diastolic) : null }
+      const payload = {
+        ...healthForm,
+        weight: healthForm.weight ? Number.parseFloat(healthForm.weight) : null,
+        blood_sugar_fasting: healthForm.blood_sugar_fasting ? Number.parseFloat(healthForm.blood_sugar_fasting) : null,
+        blood_sugar_postprandial: healthForm.blood_sugar_postprandial ? Number.parseFloat(healthForm.blood_sugar_postprandial) : null,
+        blood_pressure_systolic: healthForm.blood_pressure_systolic ? Number.parseInt(healthForm.blood_pressure_systolic, 10) : null,
+        blood_pressure_diastolic: healthForm.blood_pressure_diastolic ? Number.parseInt(healthForm.blood_pressure_diastolic, 10) : null,
+      }
       await api.post('/health-tracker/log', payload)
       await fetchData()
     } catch (err) { alert(err.response?.data?.error || 'Failed to save.') } finally { setSaving(false) }
@@ -40,7 +47,10 @@ export default function HealthTracker() {
   const handleMealSubmit = async (e) => {
     e.preventDefault(); setSaving(true)
     try {
-      const payload = { ...mealForm, calories_estimate: mealForm.calories_estimate ? parseInt(mealForm.calories_estimate) : null }
+      const payload = {
+        ...mealForm,
+        calories_estimate: mealForm.calories_estimate ? Number.parseInt(mealForm.calories_estimate, 10) : null,
+      }
       await api.post('/health-tracker/meal', payload)
       await fetchData()
     } catch (err) { alert(err.response?.data?.error || 'Failed to save.') } finally { setSaving(false) }

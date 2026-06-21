@@ -34,7 +34,20 @@ export default function Notifications() {
             {notifications.length > 0 ? notifications.map(n => {
               const ic = iconColors[n.type] || iconColors.info
               return (
-                <div key={n.id} className={`notification-item ${!n.is_read ? 'unread' : ''}`} onClick={() => !n.is_read && markRead(n.id)} style={{ cursor: !n.is_read ? 'pointer' : 'default' }}>
+                <div
+                  key={n.id}
+                  className={`notification-item ${n.is_read ? '' : 'unread'}`}
+                  onClick={n.is_read ? undefined : () => markRead(n.id)}
+                  onKeyDown={n.is_read ? undefined : (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault()
+                      markRead(n.id)
+                    }
+                  }}
+                  role={n.is_read ? undefined : 'button'}
+                  tabIndex={n.is_read ? undefined : 0}
+                  style={{ cursor: n.is_read ? 'default' : 'pointer' }}
+                >
                   <div className={`notification-icon ${n.type}`} style={{ background: ic.bg, color: ic.color }}>
                     <i className={`fas ${n.icon || 'fa-bell'}`}></i>
                   </div>

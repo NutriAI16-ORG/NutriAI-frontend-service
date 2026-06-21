@@ -4,6 +4,12 @@ import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import LoadingSpinner from '../components/LoadingSpinner'
 
+const getRiskBadgeColor = (riskLevel) => {
+  if (riskLevel === 'high') return 'danger'
+  if (riskLevel === 'medium') return 'warning'
+  return 'secondary'
+}
+
 export default function DietPlanGenerate() {
   const [documents, setDocuments] = useState([])
   const [allergies, setAllergies] = useState([])
@@ -15,10 +21,21 @@ export default function DietPlanGenerate() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    api.get('/diet-plan/documents').then(res => {
-      setDocuments(res.data.documents || [])
-      setAllergies(res.data.allergies || [])
-    }).catch(() => {}).finally(() => setLoading(false))
+    const fetchData = async () => {
+      try {
+        const [docsRes, allergyRes] = await Promise.all([
+          api.get('/diet-plan/documents'),
+          api.get('/profile'),
+        ])
+        setDocuments(docsRes.data.documents || [])
+        setAllergies(allergyRes.data.allergies || [])
+      } catch {
+        setError('Failed to fetch initial data.')
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchData()
   }, [])
 
   const toggleDoc = (id) => {
@@ -56,7 +73,7 @@ export default function DietPlanGenerate() {
                     <input className="form-check-input" type="checkbox" checked={selectedDocs.includes(doc.id)} onChange={() => toggleDoc(doc.id)} id={`doc-${doc.id}`} />
                     <label className="form-check-label" htmlFor={`doc-${doc.id}`} style={{ cursor: 'pointer' }}>
                       <div className="fw-600">{doc.original_filename}</div>
-                      <small className="text-muted">{doc.document_type.replace(/_/g, ' ')} • {new Date(doc.uploaded_at).toLocaleDateString()}</small>
+                      <small className="text-muted">{doc.document_type.replaceAll('_', ' ')} • {new Date(doc.uploaded_at).toLocaleDateString()}</small>
                     </label>
                   </div>
                 )) : <p className="text-muted p-3">No completed documents. Upload and wait for OCR to complete.</p>}
@@ -109,7 +126,7 @@ export default function DietPlanGenerate() {
                           return (
                             <div className="accordion-item" key={day}>
                               <h2 className="accordion-header">
-                                <button className={`accordion-button ${index !== 0 ? 'collapsed' : ''}`} type="button" data-bs-toggle="collapse" data-bs-target={`#day-${day}`}>
+                                <button className={`accordion-button ${index === 0 ? '' : 'collapsed'}`} type="button" data-bs-toggle="collapse" data-bs-target={`#day-${day}`}>
                                   <i className="fas fa-calendar-day me-2"></i>{day.charAt(0).toUpperCase() + day.slice(1)}
                                 </button>
                               </h2>
@@ -132,7 +149,7 @@ export default function DietPlanGenerate() {
                     <div className="mb-4">
                       <h6 className="fw-bold text-success"><i className="fas fa-check me-2"></i>Foods to Eat</h6>
                       <div className="table-responsive"><table className="table table-nutriai"><thead><tr><th>Food</th><th>Reason</th><th>Portion</th><th>Timing</th></tr></thead><tbody>
-                        {result.foods_to_eat.map((f, i) => <tr key={i}><td className="fw-600">{f.food_name}</td><td>{f.reason}</td><td>{f.portion_size}</td><td>{f.timing}</td></tr>)}
+                        {result.foods_to_eat.map((f) => <tr key={f.food_name}><td className="fw-600">{f.food_name}</td><td>{f.reason}</td><td>{f.portion_size}</td><td>{f.timing}</td></tr>)}
                       </tbody></table></div>
                     </div>
                   )}
@@ -141,7 +158,7 @@ export default function DietPlanGenerate() {
                     <div className="mb-4">
                       <h6 className="fw-bold text-danger"><i className="fas fa-times me-2"></i>Foods to Avoid</h6>
                       <div className="table-responsive"><table className="table table-nutriai"><thead><tr><th>Food</th><th>Reason</th><th>Risk</th></tr></thead><tbody>
-                        {result.foods_to_avoid.map((f, i) => <tr key={i}><td className="fw-600">{f.food_name}</td><td>{f.reason}</td><td><span className={`badge bg-${f.risk_level === 'high' ? 'danger' : f.risk_level === 'medium' ? 'warning' : 'secondary'}`}>{f.risk_level}</span></td></tr>)}
+                        {result.foods_to_avoid.map((f) => <tr key={f.food_name}><td className="fw-600">{f.food_name}</td><td>{f.reason}</td><td><span className={`badge bg-${getRiskBadgeColor(f.risk_level)}`}>{f.risk_level}</span></td></tr>)}
                       </tbody></table></div>
                     </div>
                   )}
@@ -156,8 +173,8 @@ export default function DietPlanGenerate() {
                         { label: 'Fats', val: result.nutritional_guidelines.fats_grams, unit: 'g' },
                         { label: 'Fiber', val: result.nutritional_guidelines.fiber_grams, unit: 'g' },
                         { label: 'Water', val: result.nutritional_guidelines.water_liters, unit: 'L' },
-                      ].map((n, i) => n.val && (
-                        <div key={i} className="col-4 col-md-2"><div className="text-center p-2 rounded" style={{ background: 'var(--accent-pale-green)' }}><div className="fw-bold text-primary-green">{n.val}{n.unit}</div><small className="text-muted">{n.label}</small></div></div>
+                      ].map((n) => n.val && (
+                        <div key={n.label} className="col-4 col-md-2"><div className="text-center p-2 rounded" style={{ background: 'var(--accent-pale-green)' }}><div className="fw-bold text-primary-green">{n.val}{n.unit}</div><small className="text-muted">{n.label}</small></div></div>
                       ))}</div>
                     </div>
                   )}

@@ -29,7 +29,7 @@ export default function Login() {
   const handleMicrosoft = async () => {
     try {
       const authUrl = await microsoftLogin()
-      if (authUrl) window.location.href = authUrl
+      if (authUrl) globalThis.location.href = authUrl
     } catch {
       setError('Failed to initiate Microsoft login.')
     }

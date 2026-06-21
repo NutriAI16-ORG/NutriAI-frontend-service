@@ -16,7 +16,12 @@ export default function Register() {
     setLoading(true)
     setErrors([])
     try {
-      const payload = { ...form, age: form.age ? parseInt(form.age) : null, weight: form.weight ? parseFloat(form.weight) : null, height: form.height ? parseFloat(form.height) : null }
+      const payload = {
+        ...form,
+        age: form.age ? Number.parseInt(form.age, 10) : null,
+        weight: form.weight ? Number.parseFloat(form.weight) : null,
+        height: form.height ? Number.parseFloat(form.height) : null
+      }
       await register(payload)
       showFlash('Registration successful! Welcome to NutriAI.', 'success')
       navigate('/dashboard')
@@ -30,7 +35,7 @@ export default function Register() {
   const handleMicrosoft = async () => {
     try {
       const authUrl = await microsoftLogin()
-      if (authUrl) window.location.href = authUrl
+      if (authUrl) globalThis.location.href = authUrl
     } catch {
       setErrors(['Failed to initiate Microsoft registration.'])
     }
@@ -51,7 +56,7 @@ export default function Register() {
             </div>
 
             {errors.length > 0 && (
-              <div className="alert alert-danger">{errors.map((e, i) => <div key={i}><i className="fas fa-exclamation-circle me-2"></i>{e}</div>)}</div>
+              <div className="alert alert-danger">{errors.map((e) => <div key={e}><i className="fas fa-exclamation-circle me-2"></i>{e}</div>)}</div>
             )}
 
             <button className="btn-microsoft" onClick={handleMicrosoft}>

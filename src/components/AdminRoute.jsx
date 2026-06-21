@@ -1,4 +1,5 @@
 import { Navigate } from 'react-router-dom'
+import PropTypes from 'prop-types'
 import useAuth from '../hooks/useAuth'
 
 export default function AdminRoute({ children }) {
@@ -7,4 +8,8 @@ export default function AdminRoute({ children }) {
   if (!user) return <Navigate to="/login" replace />
   if (user.role !== 'admin') return <Navigate to="/dashboard" replace />
   return children
+}
+
+AdminRoute.propTypes = {
+  children: PropTypes.node.isRequired,
 }

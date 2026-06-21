@@ -104,7 +104,7 @@ export default function Documents() {
                           </div>
                         )}
                       </td>
-                      <td>{doc.document_type.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</td>
+                      <td>{doc.document_type.replaceAll('_', ' ').replaceAll(/\b\w/g, l => l.toUpperCase())}</td>
                       <td>{new Date(doc.uploaded_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</td>
                       <td><StatusBadge status={doc.ocr_status} /></td>
                       <td>

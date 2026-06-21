@@ -87,7 +87,12 @@ export default function Profile() {
   const handleProfileSave = async (e) => {
     e.preventDefault(); setSaving(true)
     try {
-      const payload = { ...form, age: form.age ? parseInt(form.age) : null, weight: form.weight ? parseFloat(form.weight) : null, height: form.height ? parseFloat(form.height) : null }
+      const payload = {
+        ...form,
+        age: form.age ? Number.parseInt(form.age, 10) : null,
+        weight: form.weight ? Number.parseFloat(form.weight) : null,
+        height: form.height ? Number.parseFloat(form.height) : null
+      }
       await api.post('/profile/update', payload)
       await fetchUser()
       alert('Profile updated successfully!')
@@ -163,7 +168,21 @@ export default function Profile() {
                   {allergies.length > 0 ? allergies.map(a => (
                     <span key={a.id} className={`allergy-badge ${a.severity}`}>
                       {a.allergen_name}
-                      <span className="delete-allergy" onClick={() => handleDeleteAllergy(a.id)}><i className="fas fa-times"></i></span>
+                      <span
+                        className="delete-allergy"
+                        onClick={() => handleDeleteAllergy(a.id)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault()
+                            handleDeleteAllergy(a.id)
+                          }
+                        }}
+                        role="button"
+                        tabIndex={0}
+                        aria-label={`Delete allergy ${a.allergen_name}`}
+                      >
+                        <i className="fas fa-times"></i>
+                      </span>
                     </span>
                   )) : <p className="text-muted">No food allergies recorded.</p>}
                 </div>
@@ -204,7 +223,7 @@ export default function Profile() {
                     return (
                       <div key={condition} className="col-md-6">
                         <div
-                          className="checkbox-item"
+                          className={`checkbox-item ${isChecked ? 'checked' : ''} ${isDisabled ? 'disabled' : ''}`}
                           style={{
                             padding: '8px 12px',
                             borderRadius: '8px',
@@ -213,8 +232,6 @@ export default function Profile() {
                             background: isChecked ? 'rgba(46, 125, 50, 0.08)' : 'transparent',
                             opacity: isDisabled ? 0.45 : 1,
                           }}
-                          onMouseEnter={e => { if (!isDisabled && !isChecked) e.currentTarget.style.background = 'rgba(46, 125, 50, 0.05)' }}
-                          onMouseLeave={e => { if (!isChecked) e.currentTarget.style.background = 'transparent' }}
                         >
                           <div className="form-check">
                             <input
@@ -257,7 +274,7 @@ export default function Profile() {
                     return (
                       <div key={pref} className="col-md-6 col-lg-4">
                         <div
-                          className="checkbox-item"
+                          className={`checkbox-item ${isChecked ? 'checked' : ''}`}
                           style={{
                             padding: '8px 12px',
                             borderRadius: '8px',
@@ -265,8 +282,6 @@ export default function Profile() {
                             cursor: 'pointer',
                             background: isChecked ? 'rgba(46, 125, 50, 0.08)' : 'transparent',
                           }}
-                          onMouseEnter={e => { if (!isChecked) e.currentTarget.style.background = 'rgba(46, 125, 50, 0.05)' }}
-                          onMouseLeave={e => { if (!isChecked) e.currentTarget.style.background = 'transparent' }}
                         >
                           <div className="form-check">
                             <input

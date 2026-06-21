@@ -62,8 +62,8 @@ export default function Dashboard() {
               { color: 'blue', icon: 'fa-utensils', value: stats?.total_diet_plans || 0, label: 'Diet Plans' },
               { color: 'teal', icon: 'fa-heartbeat', value: stats?.total_health_logs || 0, label: 'Days Tracked' },
               { color: 'orange', icon: 'fa-allergies', value: stats?.total_allergies || 0, label: 'Allergies' },
-            ].map((s, i) => (
-              <div key={i} className="col-6 col-lg-3">
+            ].map((s) => (
+              <div key={s.label} className="col-6 col-lg-3">
                 <div className={`stat-card ${s.color}`}>
                   <div className="d-flex align-items-center gap-3">
                     <div className={`stat-icon ${s.color}`}><i className={`fas ${s.icon}`}></i></div>
@@ -131,7 +131,7 @@ export default function Dashboard() {
                         {recentDocs.map(doc => (
                           <tr key={doc.id}>
                             <td><i className="fas fa-file-alt text-primary-green me-2"></i>{doc.original_filename.slice(0, 40)}{doc.original_filename.length > 40 ? '...' : ''}</td>
-                            <td>{doc.document_type.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</td>
+                            <td>{doc.document_type.replaceAll('_', ' ').replaceAll(/\b\w/g, l => l.toUpperCase())}</td>
                             <td>{new Date(doc.uploaded_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</td>
                             <td><StatusBadge status={doc.ocr_status} /></td>
                           </tr>

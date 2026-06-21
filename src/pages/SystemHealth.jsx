@@ -19,8 +19,16 @@ export default function SystemHealth() {
 
   if (loading) return <><Navbar /><main style={{ paddingTop: '76px' }}><LoadingSpinner /></main></>
 
-  const statusColor = (s) => s === 'healthy' ? 'success' : s === 'degraded' ? 'warning' : 'danger'
-  const statusIcon = (s) => s === 'healthy' ? 'fa-check-circle' : s === 'degraded' ? 'fa-exclamation-circle' : 'fa-times-circle'
+  const statusColor = (s) => {
+    if (s === 'healthy') return 'success'
+    if (s === 'degraded') return 'warning'
+    return 'danger'
+  }
+  const statusIcon = (s) => {
+    if (s === 'healthy') return 'fa-check-circle'
+    if (s === 'degraded') return 'fa-exclamation-circle'
+    return 'fa-times-circle'
+  }
 
   return (
     <>

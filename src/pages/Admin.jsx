@@ -48,8 +48,8 @@ export default function Admin() {
               { icon: 'fa-user-check', color: 'blue', label: 'Active Users', val: stats?.active_users },
               { icon: 'fa-file-medical', color: 'teal', label: 'Documents', val: stats?.total_documents },
               { icon: 'fa-utensils', color: 'orange', label: 'Diet Plans', val: stats?.total_diet_plans },
-            ].map((s, i) => (
-              <div key={i} className="col-6 col-lg-3">
+            ].map((s) => (
+              <div key={s.label} className="col-6 col-lg-3">
                 <div className={`stat-card ${s.color}`}><div className="d-flex align-items-center gap-3"><div className={`stat-icon ${s.color}`}><i className={`fas ${s.icon}`}></i></div><div><div className="stat-value">{s.val || 0}</div><div className="stat-label">{s.label}</div></div></div></div>
               </div>
             ))}
@@ -80,7 +80,7 @@ export default function Admin() {
                 <tr key={d.id}>
                   <td>{d.original_filename?.slice(0, 30)}{d.original_filename?.length > 30 ? '...' : ''}</td>
                   <td>{d.username}</td>
-                  <td>{d.document_type?.replace(/_/g, ' ')}</td>
+                  <td>{d.document_type?.replaceAll('_', ' ')}</td>
                   <td><StatusBadge status={d.ocr_status} /></td>
                   <td>{d.uploaded_at ? new Date(d.uploaded_at).toLocaleDateString() : '-'}</td>
                 </tr>

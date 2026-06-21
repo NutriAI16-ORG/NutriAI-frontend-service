@@ -167,7 +167,7 @@ a:hover {
     line-height: 16px;
     padding: 0 4px;
     border-radius: 50%;
-    background: #FF5252;
+    background: #D32F2F;
     color: #fff;
     font-weight: 700;
     text-align: center;
@@ -282,8 +282,8 @@ a:hover {
 }
 
 .btn-hero-ghost:hover {
-    background: rgba(255,255,255,0.1);
-    color: #fff;
+    background: #fff;
+    color: var(--primary-green);
     border-color: #fff;
     transform: translateY(-2px);
 }
@@ -636,7 +636,7 @@ a:hover {
     letter-spacing: 0.3px;
 }
 
-.badge-pending { background: #FFF8E1; color: #F57F17; border: 1px solid #FFD54F; }
+.badge-pending { background: #FFF8E1; color: #8F4200; border: 1px solid #FFD54F; }
 .badge-processing { background: #E3F2FD; color: #1565C0; border: 1px solid #90CAF9; }
 .badge-completed { background: #E8F5E9; color: #2E7D32; border: 1px solid #A5D6A7; }
 .badge-failed { background: #FFEBEE; color: #C62828; border: 1px solid #EF9A9A; }
@@ -840,7 +840,7 @@ a:hover {
 }
 
 .btn-nutriai-secondary {
-    background: linear-gradient(135deg, var(--secondary-blue), #42A5F5);
+    background: linear-gradient(135deg, var(--secondary-blue), var(--secondary-blue-dark));
     color: #fff;
     border: none;
     border-radius: var(--radius-sm);
@@ -944,6 +944,10 @@ a:hover {
     margin-bottom: 1.5rem;
 }
 
+.checkbox-item:not(.disabled):hover {
+    background: rgba(46, 125, 50, 0.05) !important;
+}
+
 .allergy-badge {
     display: inline-flex;
     align-items: center;
@@ -955,8 +959,8 @@ a:hover {
     margin: 0.2rem;
 }
 
-.allergy-badge.mild { background: #FFF8E1; color: #F57F17; border: 1px solid #FFD54F; }
-.allergy-badge.moderate { background: #FFF3E0; color: #E65100; border: 1px solid #FFB74D; }
+.allergy-badge.mild { background: #FFF8E1; color: #8F4200; border: 1px solid #FFD54F; }
+.allergy-badge.moderate { background: #FFF3E0; color: #8D2D00; border: 1px solid #FFB74D; }
 .allergy-badge.severe { background: #FFEBEE; color: #C62828; border: 1px solid #EF9A9A; }
 
 .allergy-badge .delete-allergy {
@@ -1002,7 +1006,7 @@ a:hover {
 
 .notification-icon.success { background: #E8F5E9; color: var(--primary-green); }
 .notification-icon.danger { background: #FFEBEE; color: #C62828; }
-.notification-icon.warning { background: #FFF8E1; color: #F57F17; }
+.notification-icon.warning { background: #FFF8E1; color: #8F4200; }
 .notification-icon.info { background: #E3F2FD; color: var(--secondary-blue); }
 
 .notification-message {

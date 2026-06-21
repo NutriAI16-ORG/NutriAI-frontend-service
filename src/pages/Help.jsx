@@ -26,9 +26,9 @@ export default function Help() {
           <div className="content-card">
             <div className="accordion" id="helpAccordion">
               {faqs.map((faq, i) => (
-                <div key={i} className="accordion-item" style={{ border: 'none', borderBottom: '1px solid var(--border-light)' }}>
+                <div key={faq.q} className="accordion-item" style={{ border: 'none', borderBottom: '1px solid var(--border-light)' }}>
                   <h2 className="accordion-header">
-                    <button className={`accordion-button ${openIndex !== i ? 'collapsed' : ''}`} type="button" onClick={() => setOpenIndex(openIndex === i ? null : i)}
+                    <button className={`accordion-button ${openIndex === i ? '' : 'collapsed'}`} type="button" onClick={() => setOpenIndex(openIndex === i ? null : i)}
                       style={{ fontWeight: 600, fontSize: '0.95rem', color: 'var(--text-dark)', background: openIndex === i ? 'var(--accent-pale-green)' : 'transparent' }}>
                       {faq.q}
                     </button>

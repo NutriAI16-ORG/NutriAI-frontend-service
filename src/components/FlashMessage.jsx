@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import PropTypes from 'prop-types'
 
 export default function FlashMessage({ message, type = 'success' }) {
   const [visible, setVisible] = useState(true)
@@ -29,4 +30,9 @@ export default function FlashMessage({ message, type = 'success' }) {
       )}
     </AnimatePresence>
   )
+}
+
+FlashMessage.propTypes = {
+  message: PropTypes.string.isRequired,
+  type: PropTypes.string,
 }

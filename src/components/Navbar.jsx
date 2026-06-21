@@ -66,9 +66,9 @@ export default function Navbar() {
               </Link>
             </li>
             <li className="nav-item dropdown">
-              <a className={`nav-link dropdown-toggle ${isActive('/diet-plan') ? 'active' : ''}`} href="#" role="button" data-bs-toggle="dropdown">
+              <button className={`nav-link dropdown-toggle border-0 bg-transparent ${isActive('/diet-plan') ? 'active' : ''}`} type="button" data-bs-toggle="dropdown">
                 <i className="fas fa-utensils me-1"></i> Diet Plan
-              </a>
+              </button>
               <ul className="dropdown-menu">
                 <li><Link className="dropdown-item" to="/diet-plan"><i className="fas fa-magic"></i> Generate</Link></li>
                 <li><Link className="dropdown-item" to="/diet-plan/history"><i className="fas fa-history"></i> History</Link></li>
@@ -91,9 +91,9 @@ export default function Navbar() {
 
           <ul className="navbar-nav ms-auto">
             <li className="nav-item dropdown">
-              <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+              <button className="nav-link dropdown-toggle border-0 bg-transparent" type="button" data-bs-toggle="dropdown">
                 <i className="fas fa-user-circle me-1"></i> {user.username}
-              </a>
+              </button>
               <ul className="dropdown-menu dropdown-menu-end">
                 <li><Link className="dropdown-item" to="/profile"><i className="fas fa-user-edit"></i> Profile</Link></li>
                 {user.role === 'admin' && (
