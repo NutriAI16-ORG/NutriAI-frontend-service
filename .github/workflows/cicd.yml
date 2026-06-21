@@ -121,6 +121,8 @@ jobs:
             -Dsonar.projectName=${{ env.SONAR_PROJECT_KEY }}
             -Dsonar.sources=src
             -Dsonar.tests=src
+            -Dsonar.exclusions=**/*.test.jsx,**/*.test.js,**/*.spec.js,**/*.spec.jsx
+            -Dsonar.test.inclusions=**/*.test.jsx,**/*.test.js,**/*.spec.js,**/*.spec.jsx
             -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
             -Dsonar.language=js
         env:
