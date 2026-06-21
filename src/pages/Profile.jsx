@@ -168,21 +168,25 @@ export default function Profile() {
                   {allergies.length > 0 ? allergies.map(a => (
                     <span key={a.id} className={`allergy-badge ${a.severity}`}>
                       {a.allergen_name}
-                      <span
+                      <button
+                        type="button"
                         className="delete-allergy"
                         onClick={() => handleDeleteAllergy(a.id)}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter' || e.key === ' ') {
-                            e.preventDefault()
-                            handleDeleteAllergy(a.id)
-                          }
+                        style={{
+                          background: 'none',
+                          border: 'none',
+                          padding: 0,
+                          color: 'inherit',
+                          font: 'inherit',
+                          lineHeight: 'inherit',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
                         }}
-                        role="button"
-                        tabIndex={0}
                         aria-label={`Delete allergy ${a.allergen_name}`}
                       >
                         <i className="fas fa-times"></i>
-                      </span>
+                      </button>
                     </span>
                   )) : <p className="text-muted">No food allergies recorded.</p>}
                 </div>

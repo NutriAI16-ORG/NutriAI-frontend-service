@@ -182,7 +182,7 @@ export default function DietPlanGenerate() {
                   {result.allergy_notes?.length > 0 && (
                     <div className="mb-3 p-3 rounded" style={{ background: '#FFF8E1' }}>
                       <h6 className="fw-bold text-warning"><i className="fas fa-exclamation-triangle me-2"></i>Allergy Notes</h6>
-                      {result.allergy_notes.map((n, i) => <p key={i} className="mb-1" style={{ fontSize: '0.9rem' }}>• {n}</p>)}
+                      {result.allergy_notes.map((n) => <p key={n} className="mb-1" style={{ fontSize: '0.9rem' }}>• {n}</p>)}
                     </div>
                   )}
 
