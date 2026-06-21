@@ -20,7 +20,8 @@ export default defineConfig({
   test: {
     coverage: {
       reporter: ['text', 'lcov'],
-      include: ['src/components/StatusBadge.jsx'],
+      include: ['src/**/*'],
+      exclude: ['src/styles/**', 'src/index.css'],
     },
   },
 })
