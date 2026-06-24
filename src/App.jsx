@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import useAuth from './hooks/useAuth'
 
 import Landing from './pages/Landing'
@@ -41,7 +41,7 @@ export default function App() {
         <Route path="/health-tracker" element={<ProtectedRoute><HealthTracker /></ProtectedRoute>} />
         <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
         <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
-        <Route path="/help" element={<ProtectedRoute><Help /></ProtectedRoute>} />
+        <Route path="/help" element={<ProtectedRoute>{user?.role === 'admin' ? <Navigate to="/dashboard" replace /> : <Help />}</ProtectedRoute>} />
         <Route path="/system-health" element={<ProtectedRoute><SystemHealth /></ProtectedRoute>} />
 
         <Route path="/admin" element={<AdminRoute><Admin /></AdminRoute>} />

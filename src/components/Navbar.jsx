@@ -104,7 +104,9 @@ export default function Navbar() {
                 {user.role === 'admin' && (
                   <li><Link className="dropdown-item" to="/admin"><i className="fas fa-shield-alt"></i> Admin Panel</Link></li>
                 )}
-                <li><Link className="dropdown-item" to="/help"><i className="fas fa-question-circle"></i> Help</Link></li>
+                {user.role !== 'admin' && (
+                  <li><Link className="dropdown-item" to="/help"><i className="fas fa-question-circle"></i> Help</Link></li>
+                )}
                 <li><hr className="dropdown-divider" /></li>
                 <li><button className="dropdown-item text-danger" onClick={handleLogout}><i className="fas fa-sign-out-alt"></i> Logout</button></li>
               </ul>

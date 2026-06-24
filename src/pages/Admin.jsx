@@ -153,18 +153,20 @@ export default function Admin() {
     }
   }
 
-  // --- Chart 2: Diet Generations & Document Uploads (Bar & Line Combo) ---
+  // --- Chart 2: Diet Generations & Document Uploads (Line Chart for both) ---
   const activityData = {
     labels: last7Days,
     datasets: [
       {
-        type: 'bar',
+        type: 'line',
         label: 'Document Uploads',
         data: docUploadsByDay,
-        backgroundColor: 'rgba(21, 101, 192, 0.75)',
         borderColor: '#1565C0',
-        borderWidth: 1,
-        borderRadius: 4
+        backgroundColor: 'transparent',
+        borderWidth: 3,
+        tension: 0.3,
+        pointBackgroundColor: '#1565C0',
+        fill: false
       },
       {
         type: 'line',
@@ -347,7 +349,7 @@ export default function Admin() {
                       <h5><i className="fas fa-tasks text-primary-green me-2"></i>Daily Action Trends (Uploads & Generation)</h5>
                     </div>
                     <div style={{ height: '280px', position: 'relative' }}>
-                      <Bar data={activityData} options={activityOptions} />
+                      <Line data={activityData} options={activityOptions} />
                     </div>
                   </div>
                 </div>
