@@ -60,13 +60,13 @@ export default function Login() {
               </div>
               <div className="mb-3">
                 <label htmlFor="login-password" className="form-label-nutriai">Password</label>
-                <div className="input-group">
+                <div style={{ position: 'relative' }}>
                   <input id="login-password" type={showPassword ? 'text' : 'password'} className="form-control form-control-nutriai" placeholder="••••••••"
                     value={form.password} onChange={e => setForm({ ...form, password: e.target.value })} required
-                    style={{ borderRight: 'none' }} />
-                  <button type="button" className="input-group-text" onClick={() => setShowPassword(v => !v)}
-                    style={{ background: 'transparent', border: '1px solid var(--border-color)', borderLeft: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}
-                    aria-label={showPassword ? 'Hide password' : 'Show password'}>
+                    style={{ paddingRight: '2.5rem' }} />
+                  <button type="button" onClick={() => setShowPassword(v => !v)}
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                    style={{ position: 'absolute', right: '0.75rem', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', padding: 0, lineHeight: 1 }}>
                     <i className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`} />
                   </button>
                 </div>
