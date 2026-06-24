@@ -1,17 +1,36 @@
-import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import useAuth from '../hooks/useAuth'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 
+const SSO_ERROR_MESSAGES = {
+  sso_denied: 'Microsoft registration was cancelled or denied.',
+  missing_code: 'Microsoft registration failed: missing authorization code.',
+  token_failed: 'Microsoft registration failed: could not obtain token.',
+  user_failed: 'Microsoft registration failed: could not create your account.',
+  sso_failed: 'Microsoft registration encountered an unexpected error. Please try again.',
+}
+
 export default function Register() {
   const { register, microsoftLogin, showFlash } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
   const [form, setForm] = useState({ email: '', username: '', password: '', confirm_password: '', full_name: '', age: '', gender: '', weight: '', height: '' })
   const [loading, setLoading] = useState(false)
   const [errors, setErrors] = useState([])
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search)
+    const errorCode = params.get('error')
+    if (errorCode) {
+      setErrors([SSO_ERROR_MESSAGES[errorCode] || 'Microsoft sign-in failed. Please try again.'])
+    }
+  }, [location.search])
+
+
 
   const handleSubmit = async (e) => {
     e.preventDefault()

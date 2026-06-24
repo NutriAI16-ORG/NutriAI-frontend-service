@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import useAuth from '../hooks/useAuth'
 import api from '../api/axios'
 import Navbar from '../components/Navbar'
@@ -8,8 +8,9 @@ import LoadingSpinner from '../components/LoadingSpinner'
 import StatusBadge from '../components/StatusBadge'
 
 export default function Dashboard() {
-  const { user } = useAuth()
+  const { user, showFlash } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
   const [stats, setStats] = useState(null)
   const [recentPlan, setRecentPlan] = useState(null)
   const [recentDocs, setRecentDocs] = useState([])
@@ -20,6 +21,20 @@ export default function Dashboard() {
       navigate('/admin', { replace: true })
     }
   }, [user, navigate])
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search)
+    const sso = params.get('sso')
+    if (sso === 'registered') {
+      showFlash('Account created successfully! Welcome to NutriAI via Microsoft.', 'success')
+      navigate('/dashboard', { replace: true })
+    } else if (sso === 'login') {
+      showFlash('Signed in successfully with Microsoft!', 'success')
+      navigate('/dashboard', { replace: true })
+    }
+  }, [location.search, showFlash, navigate])
+
+
 
   useEffect(() => {
     const fetchData = async () => {

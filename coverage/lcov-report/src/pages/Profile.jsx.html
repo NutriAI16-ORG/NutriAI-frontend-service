@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">97.79% </span>
+                <span class="strong">97.82% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>310/317</span>
+                <span class='fraction'>315/322</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">69.11% </span>
+                <span class="strong">69.69% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>47/68</span>
+                <span class='fraction'>46/66</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>22/22</span>
+                <span class='fraction'>21/21</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">97.79% </span>
+                <span class="strong">97.82% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>310/317</span>
+                <span class='fraction'>315/322</span>
             </div>
         
             
@@ -380,7 +380,12 @@
 <a name='L315'></a><a href='#L315'>315</a>
 <a name='L316'></a><a href='#L316'>316</a>
 <a name='L317'></a><a href='#L317'>317</a>
-<a name='L318'></a><a href='#L318'>318</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L318'></a><a href='#L318'>318</a>
+<a name='L319'></a><a href='#L319'>319</a>
+<a name='L320'></a><a href='#L320'>320</a>
+<a name='L321'></a><a href='#L321'>321</a>
+<a name='L322'></a><a href='#L322'>322</a>
+<a name='L323'></a><a href='#L323'>323</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -507,12 +512,16 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -632,6 +641,7 @@
 <span class="cline-any cline-yes">26x</span>
 <span class="cline-any cline-yes">26x</span>
 <span class="cline-any cline-yes">26x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -848,13 +858,13 @@ export default function Profile() {
                 &lt;h5 className="fw-bold mb-3"&gt;&lt;i className="fas fa-user text-primary-green me-2"&gt;&lt;/i&gt;Personal Information&lt;/h5&gt;
                 &lt;form onSubmit={handleProfileSave}&gt;
                   &lt;div className="row g-3"&gt;
-                    &lt;div className="col-12"&gt;&lt;label className="form-label-nutriai"&gt;Full Name&lt;/label&gt;&lt;input className="form-control form-control-nutriai" value={form.<span class="branch-0 cbranch-no" title="branch not covered" >full_name || ''} o</span>nChange={e =&gt; setForm({ ...form, full_name: e.target.value })} required /&gt;&lt;/div&gt;
-                    &lt;div className="col-md-4"&gt;&lt;label className="form-label-nutriai"&gt;Age&lt;/label&gt;&lt;input type="number" className="form-control form-control-nutriai" value={form.age} onChange={e =&gt; setForm({ ...form, age: e.target.value })} /&gt;&lt;/div&gt;
-                    &lt;div className="col-md-4"&gt;&lt;label className="form-label-nutriai"&gt;Gender&lt;/label&gt;&lt;select className="form-control form-control-nutriai" value={form.gender} onChange={e =&gt; setForm({ ...form, gender: e.target.value })}&gt;&lt;option value=""&gt;Select&lt;/option&gt;&lt;option value="male"&gt;Male&lt;/option&gt;&lt;option value="female"&gt;Female&lt;/option&gt;&lt;option value="other"&gt;Other&lt;/option&gt;&lt;/select&gt;&lt;/div&gt;
-                    &lt;div className="col-md-4"&gt;&lt;label className="form-label-nutriai"&gt;Blood Type&lt;/label&gt;&lt;select className="form-control form-control-nutriai" value={form.blood_type} onChange={e =&gt; setForm({ ...form, blood_type: e.target.value })}&gt;&lt;option value=""&gt;Select&lt;/option&gt;{['A+','A-','B+','B-','O+','O-','AB+','AB-'].map(bt =&gt; &lt;option key={bt} value={bt}&gt;{bt}&lt;/option&gt;)}&lt;/select&gt;&lt;/div&gt;
-                    &lt;div className="col-md-6"&gt;&lt;label className="form-label-nutriai"&gt;Weight (kg)&lt;/label&gt;&lt;input type="number" step="0.1" className="form-control form-control-nutriai" value={form.weight} onChange={e =&gt; setForm({ ...form, weight: e.target.value })} /&gt;&lt;/div&gt;
-                    &lt;div className="col-md-6"&gt;&lt;label className="form-label-nutriai"&gt;Height (cm)&lt;/label&gt;&lt;input type="number" step="0.1" className="form-control form-control-nutriai" value={form.height} onChange={e =&gt; setForm({ ...form, height: e.target.value })} /&gt;&lt;/div&gt;
-                    &lt;div className="col-12"&gt;&lt;label className="form-label-nutriai"&gt;Emergency Contact&lt;/label&gt;&lt;input className="form-control form-control-nutriai" value={form.emergency_contact} onChange={e =&gt; setForm({ ...form, emergency_contact: e.target.value })} /&gt;&lt;/div&gt;
+                    &lt;div className="col-12"&gt;&lt;label htmlFor="profile-full-name" className="form-label-nutriai"&gt;Full Name&lt;/label&gt;&lt;input id="profile-full-name" className="form-control form-control-nutriai" value={form.<span class="branch-0 cbranch-no" title="branch not covered" >full_name || ''} o</span>nChange={e =&gt; setForm({ ...form, full_name: e.target.value })} required /&gt;&lt;/div&gt;
+                    &lt;div className="col-md-4"&gt;&lt;label htmlFor="profile-age" className="form-label-nutriai"&gt;Age&lt;/label&gt;&lt;input id="profile-age" type="number" className="form-control form-control-nutriai" value={form.age} onChange={e =&gt; setForm({ ...form, age: e.target.value })} /&gt;&lt;/div&gt;
+                    &lt;div className="col-md-4"&gt;&lt;label htmlFor="profile-gender" className="form-label-nutriai"&gt;Gender&lt;/label&gt;&lt;select id="profile-gender" className="form-control form-control-nutriai" value={form.gender} onChange={e =&gt; setForm({ ...form, gender: e.target.value })}&gt;&lt;option value=""&gt;Select&lt;/option&gt;&lt;option value="male"&gt;Male&lt;/option&gt;&lt;option value="female"&gt;Female&lt;/option&gt;&lt;option value="other"&gt;Other&lt;/option&gt;&lt;/select&gt;&lt;/div&gt;
+                    &lt;div className="col-md-4"&gt;&lt;label htmlFor="profile-blood-type" className="form-label-nutriai"&gt;Blood Type&lt;/label&gt;&lt;select id="profile-blood-type" className="form-control form-control-nutriai" value={form.blood_type} onChange={e =&gt; setForm({ ...form, blood_type: e.target.value })}&gt;&lt;option value=""&gt;Select&lt;/option&gt;{['A+','A-','B+','B-','O+','O-','AB+','AB-'].map(bt =&gt; &lt;option key={bt} value={bt}&gt;{bt}&lt;/option&gt;)}&lt;/select&gt;&lt;/div&gt;
+                    &lt;div className="col-md-6"&gt;&lt;label htmlFor="profile-weight" className="form-label-nutriai"&gt;Weight (kg)&lt;/label&gt;&lt;input id="profile-weight" type="number" step="0.1" className="form-control form-control-nutriai" value={form.weight} onChange={e =&gt; setForm({ ...form, weight: e.target.value })} /&gt;&lt;/div&gt;
+                    &lt;div className="col-md-6"&gt;&lt;label htmlFor="profile-height" className="form-label-nutriai"&gt;Height (cm)&lt;/label&gt;&lt;input id="profile-height" type="number" step="0.1" className="form-control form-control-nutriai" value={form.height} onChange={e =&gt; setForm({ ...form, height: e.target.value })} /&gt;&lt;/div&gt;
+                    &lt;div className="col-12"&gt;&lt;label htmlFor="profile-emergency-contact" className="form-label-nutriai"&gt;Emergency Contact&lt;/label&gt;&lt;input id="profile-emergency-contact" className="form-control form-control-nutriai" value={form.emergency_contact} onChange={e =&gt; setForm({ ...form, emergency_contact: e.target.value })} /&gt;&lt;/div&gt;
                   &lt;/div&gt;
                   &lt;button type="submit" className="btn btn-nutriai-primary w-100 mt-3" disabled={saving}&gt;&lt;i className="fas fa-save me-2"&gt;&lt;/i&gt;Save Changes&lt;/button&gt;
                 &lt;/form&gt;
@@ -867,21 +877,25 @@ export default function Profile() {
                   {allergies.length &gt; 0 ? allergies.map(a =&gt; (
                     &lt;span key={a.id} className={`allergy-badge ${a.severity}`}&gt;
                       {a.allergen_name}
-                      &lt;span
+                      &lt;button
+                        type="button"
                         className="delete-allergy"
                         onClick={() =&gt; handleDeleteAllergy(a.id)}
-                        onKeyDown={(e) =&gt; {
-                          if (e.key === <span class="branch-0 cbranch-no" title="branch not covered" >'Enter' || e.key === ' ') {</span>
-                            e.preventDefault()
-                            handleDeleteAllergy(a.id)
-                          }
+                        style={{
+                          background: 'none',
+                          border: 'none',
+                          padding: 0,
+                          color: 'inherit',
+                          font: 'inherit',
+                          lineHeight: 'inherit',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
                         }}
-                        role="button"
-                        tabIndex={0}
                         aria-label={`Delete allergy ${a.allergen_name}`}
                       &gt;
                         &lt;i className="fas fa-times"&gt;&lt;/i&gt;
-                      &lt;/span&gt;
+                      &lt;/button&gt;
                     &lt;/span&gt;
                   )<span class="branch-0 cbranch-no" title="branch not covered" >) : &lt;p className="text-muted"&gt;No food allergies recorded.&lt;/p&gt;}</span>
                 &lt;/div&gt;
@@ -952,8 +966,9 @@ export default function Profile() {
                   })}
                 &lt;/div&gt;
                 &lt;div className="mt-3"&gt;
-                  &lt;label className="form-label-nutriai"&gt;Other conditions not listed above&lt;/label&gt;
+                  &lt;label htmlFor="profile-other-conditions" className="form-label-nutriai"&gt;Other conditions not listed above&lt;/label&gt;
                   &lt;input
+                    id="profile-other-conditions"
                     className="form-control form-control-nutriai"
                     placeholder="e.g., Crohn's Disease, Food Sensitivities..."
                     value={otherCondition}
@@ -1021,7 +1036,7 @@ export default function Profile() {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-06-21T16:40:16.471Z
+                at 2026-06-24T14:28:47.546Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
