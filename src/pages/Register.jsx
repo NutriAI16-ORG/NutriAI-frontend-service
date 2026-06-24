@@ -10,6 +10,8 @@ export default function Register() {
   const [form, setForm] = useState({ email: '', username: '', password: '', confirm_password: '', full_name: '', age: '', gender: '', weight: '', height: '' })
   const [loading, setLoading] = useState(false)
   const [errors, setErrors] = useState([])
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -82,11 +84,27 @@ export default function Register() {
                 </div>
                 <div className="col-md-6">
                   <label htmlFor="register-password" className="form-label-nutriai">Password *</label>
-                  <input id="register-password" type="password" className="form-control form-control-nutriai" value={form.password} onChange={e => update('password', e.target.value)} required minLength={6} />
+                  <div className="input-group">
+                    <input id="register-password" type={showPassword ? 'text' : 'password'} className="form-control form-control-nutriai" value={form.password} onChange={e => update('password', e.target.value)} required minLength={6}
+                      style={{ borderRight: 'none' }} />
+                    <button type="button" className="input-group-text" onClick={() => setShowPassword(v => !v)}
+                      style={{ background: 'transparent', border: '1px solid var(--border-color)', borderLeft: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}
+                      aria-label={showPassword ? 'Hide password' : 'Show password'}>
+                      <i className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`} />
+                    </button>
+                  </div>
                 </div>
                 <div className="col-md-6">
                   <label htmlFor="register-confirm-password" className="form-label-nutriai">Confirm Password *</label>
-                  <input id="register-confirm-password" type="password" className="form-control form-control-nutriai" value={form.confirm_password} onChange={e => update('confirm_password', e.target.value)} required />
+                  <div className="input-group">
+                    <input id="register-confirm-password" type={showConfirmPassword ? 'text' : 'password'} className="form-control form-control-nutriai" value={form.confirm_password} onChange={e => update('confirm_password', e.target.value)} required
+                      style={{ borderRight: 'none' }} />
+                    <button type="button" className="input-group-text" onClick={() => setShowConfirmPassword(v => !v)}
+                      style={{ background: 'transparent', border: '1px solid var(--border-color)', borderLeft: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}
+                      aria-label={showConfirmPassword ? 'Hide confirm password' : 'Show confirm password'}>
+                      <i className={`fas ${showConfirmPassword ? 'fa-eye-slash' : 'fa-eye'}`} />
+                    </button>
+                  </div>
                 </div>
                 <div className="col-md-4">
                   <label htmlFor="register-age" className="form-label-nutriai">Age</label>

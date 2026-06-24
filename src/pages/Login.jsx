@@ -10,6 +10,7 @@ export default function Login() {
   const [form, setForm] = useState({ email: '', password: '' })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -59,8 +60,16 @@ export default function Login() {
               </div>
               <div className="mb-3">
                 <label htmlFor="login-password" className="form-label-nutriai">Password</label>
-                <input id="login-password" type="password" className="form-control form-control-nutriai" placeholder="••••••••"
-                  value={form.password} onChange={e => setForm({ ...form, password: e.target.value })} required />
+                <div className="input-group">
+                  <input id="login-password" type={showPassword ? 'text' : 'password'} className="form-control form-control-nutriai" placeholder="••••••••"
+                    value={form.password} onChange={e => setForm({ ...form, password: e.target.value })} required
+                    style={{ borderRight: 'none' }} />
+                  <button type="button" className="input-group-text" onClick={() => setShowPassword(v => !v)}
+                    style={{ background: 'transparent', border: '1px solid var(--border-color)', borderLeft: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}>
+                    <i className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`} />
+                  </button>
+                </div>
               </div>
               <div className="d-flex justify-content-between align-items-center mb-3">
                 <Link to="/forgot-password" className="text-primary-green" style={{ fontSize: '0.88rem' }}>Forgot Password?</Link>
