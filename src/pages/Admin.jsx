@@ -70,9 +70,9 @@ export default function Admin() {
     last7Days.push(d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }))
   }
 
-  const userGrowthByDay = Array(7).fill(0)
-  const docUploadsByDay = Array(7).fill(0)
-  const dietGensByDay = Array(7).fill(0)
+  const userGrowthByDay = [0, 0, 0, 0, 0, 0, 0]
+  const docUploadsByDay = [0, 0, 0, 0, 0, 0, 0]
+  const dietGensByDay = [0, 0, 0, 0, 0, 0, 0]
 
   const getDayIndex = (dateString) => {
     if (!dateString) return -1
@@ -276,7 +276,7 @@ export default function Admin() {
             </div>
             
             {/* Custom Tabbed Navigation Bar */}
-            <div className="btn-group shadow-sm" role="group">
+            <div className="btn-group shadow-sm">
               <button
                 type="button"
                 className={`btn btn-nutriai-tab ${activeTab === 'analytics' ? 'active' : ''}`}

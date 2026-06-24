@@ -16,7 +16,7 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    if (user && user.role === 'admin') {
+    if (user?.role === 'admin') {
       navigate('/admin', { replace: true })
     }
   }, [user, navigate])
