@@ -32,7 +32,7 @@ export default function Footer({ isLanding = false } = {}) {
           <div className="col-md-4 mb-3">
             <h6 className="text-white mb-2">Contact</h6>
             <p className="mb-1"><i className="fas fa-envelope me-2"></i>support@nutriai-health.com</p>
-            <p className="mb-0"><i className="fas fa-phone me-2"></i>+1 (555) 123-4567</p>
+            <p className="mb-0"><i className="fas fa-phone me-2"></i>+91 9381427678</p>
           </div>
         </div>
         <hr style={{ borderColor: 'rgba(255,255,255,0.1)' }} />

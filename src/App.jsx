@@ -21,7 +21,7 @@ import FlashMessage from './components/FlashMessage'
 import LoadingSpinner from './components/LoadingSpinner'
 
 export default function App() {
-  const { loading, flash } = useAuth()
+  const { loading, flash, user } = useAuth()
 
   if (loading) return <LoadingSpinner fullPage />
 
@@ -34,7 +34,7 @@ export default function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
 
-        <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+        <Route path="/dashboard" element={<ProtectedRoute>{user?.role === 'admin' ? <Admin /> : <Dashboard />}</ProtectedRoute>} />
         <Route path="/documents" element={<ProtectedRoute><Documents /></ProtectedRoute>} />
         <Route path="/diet-plan" element={<ProtectedRoute><DietPlanGenerate /></ProtectedRoute>} />
         <Route path="/diet-plan/history" element={<ProtectedRoute><DietPlanHistory /></ProtectedRoute>} />

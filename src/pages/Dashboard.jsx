@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import useAuth from '../hooks/useAuth'
 import api from '../api/axios'
 import Navbar from '../components/Navbar'
@@ -9,10 +9,17 @@ import StatusBadge from '../components/StatusBadge'
 
 export default function Dashboard() {
   const { user } = useAuth()
+  const navigate = useNavigate()
   const [stats, setStats] = useState(null)
   const [recentPlan, setRecentPlan] = useState(null)
   const [recentDocs, setRecentDocs] = useState([])
   const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    if (user && user.role === 'admin') {
+      navigate('/admin', { replace: true })
+    }
+  }, [user, navigate])
 
   useEffect(() => {
     const fetchData = async () => {
