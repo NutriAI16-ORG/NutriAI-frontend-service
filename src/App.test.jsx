@@ -60,6 +60,7 @@ vi.mock('react-chartjs-2', () => ({
   Line: () => null,
   Bar: () => null,
   Doughnut: () => null,
+  Pie: () => null,
 }))
 
 vi.mock('react-dropzone', () => ({
