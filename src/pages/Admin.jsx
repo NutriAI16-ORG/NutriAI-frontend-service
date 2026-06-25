@@ -6,7 +6,7 @@ import LoadingSpinner from '../components/LoadingSpinner'
 import StatusBadge from '../components/StatusBadge'
 
 // Chart.js imports
-import { Line, Bar, Doughnut, Pie } from 'react-chartjs-2'
+import { Line, Doughnut, Pie } from 'react-chartjs-2'
 import {
   Chart as ChartJS,
   CategoryScale,

@@ -289,6 +289,7 @@ describe('Navbar — all branches', () => {
     globalThis.mockStateOverrides2 = [0]
     const el = Navbar()
     globalThis.mockStateOverrides2 = null
+    expect(el).toBeDefined()
     traverse(el)
     globalThis.mockUseContextValue2 = undefined
   })
