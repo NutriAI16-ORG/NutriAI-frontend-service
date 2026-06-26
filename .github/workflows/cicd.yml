@@ -305,8 +305,11 @@ jobs:
     name: "CD - Update Helm Values"
     runs-on: ubuntu-latest
     environment: ${{ github.ref == 'refs/heads/main' && 'production' || '' }}
-    needs: [prepare, push]
-    if: needs.push.result == 'success'
+    needs: [prepare, push, notify]
+    if: |
+      always() &&
+      needs.push.result == 'success' &&
+      (needs.notify.result == 'success' || needs.notify.result == 'skipped' || needs.notify.result == 'failure')
 
     steps:
       - name: Resolve target values file
@@ -377,7 +380,7 @@ jobs:
   notify:
     name: "Notify"
     runs-on: ubuntu-latest
-    needs: [prepare, test, sonar, build, trivy, push, create-release, update-helm]
+    needs: [prepare, test, sonar, build, trivy, push, create-release]
     if: always() && github.ref == 'refs/heads/main'
 
     steps:
