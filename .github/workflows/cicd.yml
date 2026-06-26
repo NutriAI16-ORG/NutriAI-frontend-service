@@ -14,6 +14,9 @@ env:
   SERVICE_NAME: nutriai-frontend
   NODE_VERSION: '20'
   SONAR_PROJECT_KEY: NutriAI-Frontend
+  ACR_LOGIN_SERVER: ${{ github.ref == 'refs/heads/main' && secrets.PROD_ACR_LOGIN_SERVER || secrets.DEV_ACR_LOGIN_SERVER }}
+  ACR_USERNAME: ${{ github.ref == 'refs/heads/main' && secrets.PROD_ACR_USERNAME || secrets.DEV_ACR_USERNAME }}
+  ACR_PASSWORD: ${{ github.ref == 'refs/heads/main' && secrets.PROD_ACR_PASSWORD || secrets.DEV_ACR_PASSWORD }}
 
 jobs:
 
@@ -185,13 +188,13 @@ jobs:
         run: |
           docker build \
             -f Dockerfile \
-            -t ${{ secrets.ACR_LOGIN_SERVER }}/${{ env.SERVICE_NAME }}:${{ needs.prepare.outputs.tag }} \
+            -t ${{ env.ACR_LOGIN_SERVER }}/${{ env.SERVICE_NAME }}:${{ needs.prepare.outputs.tag }} \
             .
 
       - name: Save image as tar artifact
         run: |
           docker save \
-            ${{ secrets.ACR_LOGIN_SERVER }}/${{ env.SERVICE_NAME }}:${{ needs.prepare.outputs.tag }} \
+            ${{ env.ACR_LOGIN_SERVER }}/${{ env.SERVICE_NAME }}:${{ needs.prepare.outputs.tag }} \
             -o /tmp/docker-image.tar
 
       - name: Upload image artifact
@@ -220,7 +223,7 @@ jobs:
       - name: Trivy Security Scan
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: '${{ secrets.ACR_LOGIN_SERVER }}/${{ env.SERVICE_NAME }}:${{ needs.prepare.outputs.tag }}'
+          image-ref: '${{ env.ACR_LOGIN_SERVER }}/${{ env.SERVICE_NAME }}:${{ needs.prepare.outputs.tag }}'
           format: table
           exit-code: '1'
           ignore-unfixed: true
@@ -251,17 +254,17 @@ jobs:
       - name: Docker Login to ACR
         uses: docker/login-action@v3
         with:
-          registry: ${{ secrets.ACR_LOGIN_SERVER }}
-          username: ${{ secrets.ACR_USERNAME }}
-          password: ${{ secrets.ACR_PASSWORD }}
+          registry: ${{ env.ACR_LOGIN_SERVER }}
+          username: ${{ env.ACR_USERNAME }}
+          password: ${{ env.ACR_PASSWORD }}
 
       - name: Push Docker Image (semver + latest)
         run: |
-          docker push ${{ secrets.ACR_LOGIN_SERVER }}/${{ env.SERVICE_NAME }}:${{ needs.prepare.outputs.tag }}
+          docker push ${{ env.ACR_LOGIN_SERVER }}/${{ env.SERVICE_NAME }}:${{ needs.prepare.outputs.tag }}
           if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
-            docker tag  ${{ secrets.ACR_LOGIN_SERVER }}/${{ env.SERVICE_NAME }}:${{ needs.prepare.outputs.tag }} \
-                        ${{ secrets.ACR_LOGIN_SERVER }}/${{ env.SERVICE_NAME }}:latest
-            docker push ${{ secrets.ACR_LOGIN_SERVER }}/${{ env.SERVICE_NAME }}:latest
+            docker tag  ${{ env.ACR_LOGIN_SERVER }}/${{ env.SERVICE_NAME }}:${{ needs.prepare.outputs.tag }} \
+                        ${{ env.ACR_LOGIN_SERVER }}/${{ env.SERVICE_NAME }}:latest
+            docker push ${{ env.ACR_LOGIN_SERVER }}/${{ env.SERVICE_NAME }}:latest
           fi
 
       - name: Create Git Tag
@@ -294,7 +297,7 @@ jobs:
           body: |
             Release of ${{ env.SERVICE_NAME }}
             Version: ${{ needs.prepare.outputs.tag }}
-            Image: ${{ secrets.ACR_LOGIN_SERVER }}/${{ env.SERVICE_NAME }}:${{ needs.prepare.outputs.tag }}
+            Image: ${{ env.ACR_LOGIN_SERVER }}/${{ env.SERVICE_NAME }}:${{ needs.prepare.outputs.tag }}
           generate_release_notes: true
 
   # ── JOB 9: UPDATE HELM VALUES ────────────────────────────────────────────────
@@ -392,7 +395,7 @@ jobs:
 
             Service:      ${{ env.SERVICE_NAME }}
             Tag:          ${{ needs.prepare.outputs.tag }}
-            Image:        ${{ secrets.ACR_LOGIN_SERVER }}/${{ env.SERVICE_NAME }}:${{ needs.prepare.outputs.tag }}
+            Image:        ${{ env.ACR_LOGIN_SERVER }}/${{ env.SERVICE_NAME }}:${{ needs.prepare.outputs.tag }}
             Helm Updated: helm/nutriai/frontend.image.tag
             Repository:   ${{ github.repository }}
             Triggered By: ${{ github.actor }}
